@@ -5,6 +5,7 @@ OBJS:=$(SRC:.c=.o)
 
 OPT += -O2
 CFLAGS += -std=c99 -Wall -Wextra
+LDFLAGS += -lm
 
 all: Makefile $(EXE)
 
