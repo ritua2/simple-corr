@@ -146,6 +146,12 @@ int main(int argc, char **argv)
         fprintf(stderr,"filename-with-bins: an ascii file containing <rlow rmax> specifying logarithmic bins (number of lines equal the number of bins)\n");
         return EXIT_FAILURE;
     }
+
+    int logbins = 0;
+    if(argc > 3) {
+        logbins = atoi(argv[3]);
+        fprintf(stderr,"Assuming that bins are logarithmic. Using logbins = %d\n", logbins);
+    }
     double *xpos, *ypos, *zpos;
     int64_t Npart = read_ascii_file(argv[1], &xpos, &ypos, &zpos);
     if(Npart <= 0) {
@@ -163,6 +169,13 @@ int main(int argc, char **argv)
     int64_t *npairs = calloc(nbins, sizeof(*npairs));
     const double sqr_rmin = rmin*rmin;
     const double sqr_rmax = rmax*rmax;
+    const double log10rmin = log10(rmin);
+    const double log10rmax = log10(rmax);
+    /* because of the way nbins is implemented
+       bin `0' is underflow, and bin `nbin' is overflow  */    
+    const double dlogr = (log10rmax - log10rmin)/(nbins - 1);
+    const double inv_dlogr = 1.0/dlogr;
+
     for(int64_t i=0;i<Npart;i++) {
         for(int64_t j=0;j<Npart;j++) {
             const double dx = xpos[i] - xpos[j];
@@ -172,11 +185,24 @@ int main(int argc, char **argv)
             const double r2 = dx*dx + dy*dy + dz*dz;
             if(r2 < sqr_rmin || r2 >= sqr_rmax) continue;
             const double r = sqrt(r2);
-            for(int kbin=nbins-1;kbin>=1;kbin--) {
-                if(r >= rupp[kbin-1])  {
-                    npairs[kbin]++;
-                    rpavg[kbin] += r;
-                    break;
+            if (logbins) {
+                const int kbin = (int) ((log10(r) - log10rmin) * inv_dlogr);
+                /*
+                  because of the way nbins is implemented
+                  bin `0' is underflow, and bin `nbin' is overflow
+                  The previous calculation of `kbin' maps into [0, nbins-2]
+                  which we want to map into [1, nbins-1]. Therefore,
+                  add 1 to the calculated kbin
+                */ 
+                npairs[kbin+1]++;
+                rpavg[kbin+1] += r;
+            } else {
+                for(int kbin=nbins-1;kbin>=1;kbin--) {
+                    if(r >= rupp[kbin-1])  {
+                        npairs[kbin]++;
+                        rpavg[kbin] += r;
+                        break;
+                    }
                 }
             }
         }
