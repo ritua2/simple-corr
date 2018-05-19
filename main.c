@@ -4,6 +4,11 @@
 #include <inttypes.h>
 #include <math.h>
 
+
+int64_t getnumlines(const char *fname,const char comment);
+int64_t read_ascii_file(const char *filename, double **xpos, double **ypos, double **zpos);
+int setup_bins_double(const char *fname,double *rmin,double *rmax,int *nbin,double **rupp);
+
 int64_t getnumlines(const char *fname,const char comment)
 {
     FILE *fp= NULL;
@@ -141,9 +146,16 @@ int setup_bins_double(const char *fname,double *rmin,double *rmax,int *nbin,doub
 int main(int argc, char **argv)
 {
     if(argc < 3) {
-        fprintf(stderr,"Usage: ./%s `filename' `filename-with-bins'\n", argv[0]);
-        fprintf(stderr,"filename: an ascii file containing particle data (white-space-separated, 3 columns of x y z)\n");
-        fprintf(stderr,"filename-with-bins: an ascii file containing <rlow rmax> specifying logarithmic bins (number of lines equal the number of bins)\n");
+        fprintf(stderr,"\n\tUsage: %s `filename (string)' `filename-with-bins (string)' `[log bins (boolean)]'\n\n", argv[0]);
+        fprintf(stderr,"\t************************************************************\n");
+        fprintf(stderr,"\tRequired\n");
+        fprintf(stderr,"\t--------\n");
+        fprintf(stderr,"\t filename                string, an ascii file containing particle data (white-space-separated, 3 columns of x y z)\n");
+        fprintf(stderr,"\t filename-with-bins      string, an ascii file containing <rlow rmax> specifying logarithmic bins (number of lines equal the number of bins)\n");
+        fprintf(stderr,"\n\tOptional\n");
+        fprintf(stderr,"\t--------\n");
+        fprintf(stderr,"\t log-bins                boolean, default 0. Supply `1' indicating that the supplied bins are logarithmic (assumed to be log10)\n");
+        fprintf(stderr,"\t************************************************************\n\n");
         return EXIT_FAILURE;
     }
 
