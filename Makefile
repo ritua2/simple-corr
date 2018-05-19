@@ -1,15 +1,19 @@
 CC := gcc
 SRC := main.c
 EXE := simple-corr
+OBJS:=$(SRC:.c=.o)
+
+OPT += -O2
+CFLAGS += -Wall -Wextra
 
 all: Makefile $(EXE)
 
 .PHONY: clean celan clena celna
 
 $(EXE): $(OBJS)
-	$(CC) $(LDFLAGS) $(OPT) $* -o $@
+	$(CC) $(LDFLAGS) $(OPT) $< -o $@
 
-%.o: %.c %.h
+%.o: %.c Makefile
 	$(CC) $(CFLAGS) $(OPT) -c $< -o $@
 
 tests: $(EXE)

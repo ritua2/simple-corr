@@ -8,7 +8,7 @@ int64_t read_ascii_file(const char *filename, double **xpos, double **ypos, doub
 {
 
 
-
+    return EXIT_SUCCESS;
 }
 
 
@@ -19,5 +19,5 @@ int main(int argc, char **argv)
 
 
 
-    return EXIT_FAILURE;
+    return EXIT_SUCCESS;
 }
