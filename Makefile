@@ -12,7 +12,7 @@ all: Makefile $(EXE)
 .PHONY: clean celan clena celna
 
 $(EXE): $(OBJS)
-	$(CC) $(LDFLAGS) $(OPT) $< -o $@
+	$(CC) $(OBJS) $(OPT) $(LDFLAGS) -o $@
 
 %.o: %.c Makefile
 	$(CC) $(CFLAGS) $(OPT) -c $< -o $@
