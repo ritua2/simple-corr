@@ -4,7 +4,7 @@ EXE := simple-corr
 OBJS:=$(SRC:.c=.o)
 
 OPT += -O2
-CFLAGS += -Wall -Wextra
+CFLAGS += -std=c99 -Wall -Wextra
 
 all: Makefile $(EXE)
 
