@@ -29,6 +29,7 @@
 *.dylib
 
 # Executables
+simple-corr
 *.exe
 *.out
 *.app
