@@ -179,5 +179,6 @@ int main(int argc, char **argv)
     
 
     free(xpos);free(ypos);free(zpos);
+    free(rupp);free(npairs);free(rpavg);
     return EXIT_SUCCESS;
 }
