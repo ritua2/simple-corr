@@ -40,6 +40,13 @@ int64_t read_ascii_file(const char *filename, double **xpos, double **ypos, doub
     double *x = calloc(numlines, sizeof(*x));
     double *y = calloc(numlines, sizeof(*y));
     double *z = calloc(numlines, sizeof(*z));
+    if(x == NULL || y == NULL || z == NULL) {
+        free(x);free(y);free(z);
+        fprintf(stderr,"Error: Could not allocate memory for %"PRId64" elements for the (x/y/z) arrays\n", numlines);
+        perror(NULL);
+        return -1;
+    }
+    
     FILE *fp = fopen(filename, "rt");
     if(fp == NULL) {
         fprintf(stderr,"Error:Could not open file `%s' in function %s\n", filename, __FUNCTION__);
@@ -90,6 +97,11 @@ int setup_bins_double(const char *fname,double *rmin,double *rmax,int *nbin,doub
     int nread=0;
     *nbin = ((int) getnumlines(fname,comment))+1;
     *rupp = calloc(*nbin+1, sizeof(double));
+    if(rupp == NULL) {
+        fprintf(stderr,"Error: Could not allocate memory for %d bins to store the histogram limits\n", *nbin+1);
+        perror(NULL);
+        return EXIT_FAILURE;
+    }
 
     fp = fopen(fname,"rt");
     if(fp == NULL) {
