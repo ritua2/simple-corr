@@ -191,7 +191,7 @@ void __global__ kernel0(double * xpos,double * ypos,double * zpos,double * rupp,
       }
   }
 
-  __syncthreads();
+  //__syncthreads();
 
  }
 
