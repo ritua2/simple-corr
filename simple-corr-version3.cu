@@ -361,3 +361,4 @@ cudaFree(device_rpavg);
   free(totalRpavg);
   return 0;
 }
+
