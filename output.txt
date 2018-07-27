@@ -1,3 +1,6 @@
+Note: The difference in results in the serial version and the parallel version is due to the fact that the serial version considers comparing all values to each other in all the iterations of the for-loop. However, in the parallel version, it is assumed that since the distance is symmetric (that is, the distance of point-i from point-j is the same as the distance of point-j from point-i), we can reduce the number of comparisons in each iteration of the for-loop. 
+
+
 Time taken to run the serial version of the program:
 nid00152(1028)$ time manodeep/simple-corr-master/simple-corr manodeep/simple-corr-master/gals_Mr19_100k.txt manodeep/simple-corr-master/bins
 1.000000e-01	1.247147e-01	1.118675e-01	         646	0.000000e+00
@@ -63,4 +66,44 @@ nid00152(1029)$ time cudatest11 manodeep/simple-corr-master/gals_Mr19_100k.txt m
 real	0m3.148s
 user	0m2.500s
 sys	0m0.628s
-nid00152(1030)$ 
+
+
+To get exactly same output as the serial version, change
+
+for(int64_t j = (i+1);j < Npart;j++) {
+
+-> 
+for(int64_t j = 0 ;j < Npart;j++) {
+
+in the program. The output after this change is presented below:
+
+nid00152(1037)$ time cudatest12 manodeep/simple-corr-master/gals_Mr19_100k.txt manodeep/simple-corr-master/bins
+1.000000e-01	1.247147e-01	1.118675e-01	         646	0.000000e+00
+1.247147e-01	1.555375e-01	1.399613e-01	         876	0.000000e+00
+1.555375e-01	1.939781e-01	1.751991e-01	        1068	0.000000e+00
+1.939781e-01	2.419192e-01	2.168570e-01	        1436	0.000000e+00
+2.419192e-01	3.017088e-01	2.720638e-01	        1772	0.000000e+00
+3.017088e-01	3.762752e-01	3.379234e-01	        2504	0.000000e+00
+3.762752e-01	4.692704e-01	4.234950e-01	        3222	0.000000e+00
+4.692704e-01	5.852492e-01	5.274271e-01	        4246	0.000000e+00
+5.852492e-01	7.298917e-01	6.582626e-01	        5352	0.000000e+00
+7.298917e-01	9.102821e-01	8.205533e-01	        7036	0.000000e+00
+9.102821e-01	1.135255e+00	1.020290e+00	        8768	0.000000e+00
+1.135255e+00	1.415830e+00	1.273909e+00	       10716	0.000000e+00
+1.415830e+00	1.765748e+00	1.594056e+00	       13304	0.000000e+00
+1.765748e+00	2.202148e+00	1.985024e+00	       17404	0.000000e+00
+2.202148e+00	2.746401e+00	2.480233e+00	       24646	0.000000e+00
+2.746401e+00	3.425166e+00	3.097319e+00	       35292	0.000000e+00
+3.425166e+00	4.271685e+00	3.867248e+00	       54400	0.000000e+00
+4.271685e+00	5.327418e+00	4.820616e+00	       87658	0.000000e+00
+5.327418e+00	6.644073e+00	6.017243e+00	      144130	0.000000e+00
+6.644073e+00	8.286135e+00	7.508562e+00	      240800	0.000000e+00
+8.286135e+00	1.033403e+01	9.365970e+00	      414624	0.000000e+00
+1.033403e+01	1.288805e+01	1.168629e+01	      731622	0.000000e+00
+1.288805e+01	1.607329e+01	1.457253e+01	     1293140	0.000000e+00
+1.607329e+01	2.004575e+01	1.818249e+01	     2329820	0.000000e+00
+2.004575e+01	2.500000e+01	2.268212e+01	     4234258	0.000000e+00
+
+real	0m3.326s
+user	0m2.636s
+sys	0m0.672s
